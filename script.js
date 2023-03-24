@@ -96,6 +96,12 @@ const locations = [
     "button text": ["REPLAY?","REPLAY?","REPLAY?"],
     "button functions":[restart,restart,restart],
     text: "You defeat the dragon! YOU WIN THE GAME!!. "
+  },
+  {
+    name:"easter egg",
+    "button text": ["2","8","Go to town square?"],
+    "button functions":[pickTwo,pickEight,goTown],
+    text: "You find a secret game. Pick a number above. Ten numbers will be "
   }
 ]
 
@@ -203,7 +209,13 @@ function goFight(){
 function attack(){
   text.innerText = "The "+monsters[fighting].name+" attacks."
   text.innerText += "You attack it with your "+weapons[currentWeapon].name+"."
-  health -= monsters[fighting].level
+  if(isMonsterHit()){
+    health -= getMonsterAttackValue(monsters[fighting].level)
+  }
+  else{
+    text.innerText += "You miss!."
+  }
+  
   monsterHealth -= weapons[currentWeapon].power+Math.floor(Math.random()*xp)+1
   healthText.innerText = health
   monsterHealthText.innerText = monsterHealth
@@ -218,6 +230,20 @@ function attack(){
       defeatMonster()
     }
   }
+    if(Math.random()<=.1&&inventory.length!==1){
+      text.innerText += "Your "+inventory.pop()+" breaks."
+      currentWeapon-- 
+    }
+}
+
+function getMonsterAttackValue(level){
+  let hit = (level*5)-(Math.floor(Math.random()*xp))
+  console.log(hit)
+  return hit
+}
+
+function isMonsterHit(){
+  return Math.random()>.2 || health < 20
 }
 
 function dodge(){
@@ -250,6 +276,10 @@ function restart(){
   healthText.innerText = health
   xpText.innerText = xp
   goTown()
+}
+
+function easterEgg(){
+  update(locations[7])
 }
 
 
