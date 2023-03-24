@@ -14,7 +14,7 @@ const xpText = document.querySelector("#xpText");
 const healthText = document.querySelector("#healthText");
 const goldText = document.querySelector("#goldText");
 const monsterStats = document.querySelector("#monsterStats");
-const monterNameText = document.querySelector("#monterName");
+const monsterNameText = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
 
 const weapons = [
@@ -90,6 +90,12 @@ const locations = [
     "button text": ["REPLAY","REPLAY","REPLAY"],
     "button functions":[restart,restart,restart],
     text: "You dies. "
+  },
+  {
+    name:"win",
+    "button text": ["REPLAY?","REPLAY?","REPLAY?"],
+    "button functions":[restart,restart,restart],
+    text: "You defeat the dragon! YOU WIN THE GAME!!. "
   }
 ]
 
@@ -142,7 +148,7 @@ function buyWeapon(){
     gold-=30
     currentWeapon++
     goldText.innerText = gold;
-    let newWeapon = weapons[currenWeapon].name
+    let newWeapon = weapons[currentWeapon].name
     text.innerText = "You now have a "+ newWeapon+"."
     inventory.push(newWeapon)
     text.innerText += "In your inventory you have : "+inventory
@@ -195,7 +201,7 @@ function goFight(){
 }
 
 function attack(){
-  text.innerText = "The "+monster[fighting].name+" attacks."
+  text.innerText = "The "+monsters[fighting].name+" attacks."
   text.innerText += "You attack it with your "+weapons[currentWeapon].name+"."
   health -= monsters[fighting].level
   monsterHealth -= weapons[currentWeapon].power+Math.floor(Math.random()*xp)+1
@@ -205,12 +211,17 @@ function attack(){
     lose()
   }
   else if(monsterHealth<=0){
-    defeatMonster()
+    if(fighting===2){
+      winGame()
+    }
+    else{
+      defeatMonster()
+    }
   }
 }
 
 function dodge(){
-  text.innerText = "You dodge the attack from the "+monster[fighting].name+"."
+  text.innerText = "You dodge the attack from the "+monsters[fighting].name+"."
 }
 
 function defeatMonster(){
@@ -222,7 +233,23 @@ function defeatMonster(){
 }
 
 function lose(){
-  
+  update(locations[5])
+}
+
+function winGame(){
+  update(locations[6])
+}
+
+function restart(){
+  xp = 0;
+  health = 100;
+  gold = 50;
+  currentWeapon = 0;
+  inventory = ["stick"];
+  goldText.innerText = gold
+  healthText.innerText = health
+  xpText.innerText = xp
+  goTown()
 }
 
 
